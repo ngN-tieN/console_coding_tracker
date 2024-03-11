@@ -55,10 +55,27 @@ internal class DatabaseService{
             var coding_trackers = connection.Query<coding_tracker>(commandInput);
 
             foreach(var coding_tracker in coding_trackers){
-                Console.WriteLine("-----------------------------------------------------------------------------------");
+                Console.WriteLine("--------------------------------------------------------------------------------------------");
                 Console.WriteLine($"ID: {coding_tracker.Id} - Start time: {coding_tracker.StartTime} - End time: {coding_tracker.EndTime} - Duration: {coding_tracker.Duration}");
             } 
-            Console.WriteLine("-----------------------------------------------------------------------------------");
+            Console.WriteLine("--------------------------------------------------------------------------------------------");
+            connection.Close();
+        }
+    }
+
+    public bool UpdateDatabase(int Id, string StartTime, string EndTime, int Duration){
+        using(var connection = new SqliteConnection(GetConnectionStringSQLite())){
+            connection.Open();
+            var tableCmd = connection.CreateCommand();
+            string commandInput = @"UPDATE coding_tracker
+                                    SET StartTime='{0}', EndTime='{1}', Duration={2}
+                                    WHERE Id={3}";
+            tableCmd.CommandText = String.Format(commandInput, StartTime, EndTime, Duration, Id);
+            Console.WriteLine(tableCmd.CommandText);
+            int rows = tableCmd.ExecuteNonQuery();
+            connection.Close();
+            if(rows >= 1) return true;
+            return false;
         }
     }
 
