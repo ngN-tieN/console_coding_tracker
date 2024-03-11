@@ -35,9 +35,9 @@ internal class CrudController{
                     // case "3":
                     //     Delete();
                     //     break;
-                    // case "4":
-                    //     Update();
-                    //     break;
+                    case "4":
+                        Update();
+                        break;
                     default:
                         Console.WriteLine("Please enter a proper number!");
                         break;
@@ -49,11 +49,13 @@ internal class CrudController{
     public static void Insert(){
         Console.Clear();
         string StartTime = input.GetDateTimeInput("\n\nPlease insert the start time: (Format DD-MM-YY hh:mm). Type 0 to return to main menu"); 
+        if(StartTime == "0") return;
         string EndTime = input.GetDateTimeInput("\n\nPlease insert the end time: (Format DD-MM-YY hh:mm). Type 0 to return to main menu");
+        if(EndTime =="0") return;
         if(!(val.ValDateTimeInput(StartTime) 
             && val.ValDateTimeInput(EndTime))) 
             {
-                Console.WriteLine("Wrong format,return to main menu");
+                Console.WriteLine("Wrong format, return to main menu");
                 return;
             }    
         int Duration = CalculateDuration(StartTime:StartTime, EndTime:EndTime);    
@@ -69,6 +71,35 @@ internal class CrudController{
     public static void GetAllRecords(){
         Console.Clear();
         db.SelectAllRecord();
+    }
+
+    public static void Update(){
+        Console.Clear();
+        GetAllRecords();
+        int Id = input.GetNumberInput("\n\nPlease insert the id you want to update: (Format DD-MM-YY hh:mm). Type 0 to return to main menu"); 
+        if(Id == 0) return;
+        if(Id == -1) 
+        {
+            Console.WriteLine("Invalid input. Return to main menu.");
+        }
+        
+        string StartTime = input.GetDateTimeInput("\n\nPlease insert the start time you want to update: (Format MM-DD-YY hh:mm). Type 0 to return to main menu"); 
+        string EndTime = input.GetDateTimeInput("\n\nPlease insert the end time you want to update: (Format MM-DD-YY hh:mm). Type 0 to return to main menu");
+        if(!(val.ValDateTimeInput(StartTime) 
+            && val.ValDateTimeInput(EndTime))) 
+        {
+            Console.WriteLine("Wrong format, return to main menu");
+            return;
+        }    
+        int Duration = CalculateDuration(StartTime, EndTime);
+        if(db.UpdateDatabase(Id:Id, StartTime:StartTime, EndTime:EndTime, Duration:Duration))
+        {
+            Console.WriteLine($"Update record with ID:{Id}");
+            return;
+        }
+        Console.WriteLine($"Record with ID:{Id} not found.");
+
+
     }
 
     
