@@ -7,10 +7,10 @@ class codingTimeLoggerApp{
     public static void Main(){
         //Initialize and add some dummy data to sqlite db
         DatabaseService dbService = new();
-        CrudController controller = new();
+        TableVisualization table = new();
         dbService.InitDatabaseSQLite();
 
-        //
-        controller.PrintConsole();
+        
+        table.PrintConsole();
     }
 }
